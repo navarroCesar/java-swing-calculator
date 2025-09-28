@@ -22,7 +22,7 @@ public class Calculator extends JFrame {
 		setLayout(new BorderLayout());
 
 		Display display = new Display();
-		display.setPreferredSize(new Dimension(233,60));
+		display.setPreferredSize(new Dimension(233, 60));
 		add(display, BorderLayout.NORTH);
 
 		Keyboard keyboard = new Keyboard();
