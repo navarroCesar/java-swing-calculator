@@ -1,7 +1,8 @@
 package calculator.view;
 
 import java.awt.Color;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
 import javax.swing.JPanel;
 
@@ -14,31 +15,51 @@ public class Keyboard extends JPanel {
 
 	public Keyboard() {
 
-		setLayout(new GridLayout(5, 4));
+		GridBagLayout layout = new GridBagLayout();
+		GridBagConstraints c = new GridBagConstraints();
 
-		add(new Button("AC", COLOR_DARK_GRAY));
-		add(new Button("+/-", COLOR_DARK_GRAY));
-		add(new Button("%", COLOR_DARK_GRAY));
-		add(new Button("/", COLOR_ORANGE));
+		setLayout(layout);
 
-		add(new Button("7", COLOR_LIGHT_GRAY));
-		add(new Button("8", COLOR_LIGHT_GRAY));
-		add(new Button("9", COLOR_LIGHT_GRAY));
-		add(new Button("*", COLOR_ORANGE));
-		
-		add(new Button("7", COLOR_LIGHT_GRAY));
-		add(new Button("8", COLOR_LIGHT_GRAY));
-		add(new Button("9", COLOR_LIGHT_GRAY));
-		add(new Button("*", COLOR_ORANGE));
-		
-		add(new Button("7", COLOR_LIGHT_GRAY));
-		add(new Button("8", COLOR_LIGHT_GRAY));
-		add(new Button("9", COLOR_LIGHT_GRAY));
-		add(new Button("*", COLOR_ORANGE));
-		
-		add(new Button("7", COLOR_LIGHT_GRAY));
-		add(new Button("8", COLOR_LIGHT_GRAY));
-		add(new Button("9", COLOR_LIGHT_GRAY));
-		add(new Button("*", COLOR_ORANGE));
+		c.weightx = 1;
+		c.weighty = 1;
+		c.fill = GridBagConstraints.BOTH;
+
+		// First line
+		c.gridwidth = 3;
+		addButton("AC", COLOR_DARK_GRAY, c, 0, 0);
+		c.gridwidth = 1;
+		addButton("/", COLOR_ORANGE, c, 3, 0);
+
+		// Second line
+		addButton("7", COLOR_LIGHT_GRAY, c, 0, 1);
+		addButton("8", COLOR_LIGHT_GRAY, c, 1, 1);
+		addButton("9", COLOR_LIGHT_GRAY, c, 2, 1);
+		addButton("*", COLOR_ORANGE, c, 3, 1);
+		// Third line
+		addButton("4", COLOR_LIGHT_GRAY, c, 0, 2);
+		addButton("5", COLOR_LIGHT_GRAY, c, 1, 2);
+		addButton("6", COLOR_LIGHT_GRAY, c, 2, 2);
+		addButton("-", COLOR_ORANGE, c, 3, 2);
+
+		// Fourth line
+		addButton("1", COLOR_LIGHT_GRAY, c, 0, 3);
+		addButton("2", COLOR_LIGHT_GRAY, c, 1, 3);
+		addButton("3", COLOR_LIGHT_GRAY, c, 2, 3);
+		addButton("+", COLOR_ORANGE, c, 3, 3);
+
+		// Fifth line
+		c.gridwidth = 2;
+		addButton("0", COLOR_LIGHT_GRAY, c, 0, 4);
+		c.gridwidth = 1;
+		addButton(",", COLOR_LIGHT_GRAY, c, 2, 4);
+		addButton("=", COLOR_ORANGE, c, 3, 4);
+	}
+
+	private void addButton(String text, Color color, GridBagConstraints c, int x, int y) {
+		c.gridy = y;
+		c.gridx = x;
+		Button button = new Button(text, color);
+		add(button, c);
+
 	}
 }
