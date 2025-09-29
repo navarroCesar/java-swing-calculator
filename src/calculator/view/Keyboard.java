@@ -3,11 +3,16 @@ package calculator.view;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import calculator.model.CalculatorMemory;
+
 @SuppressWarnings("serial")
-public class Keyboard extends JPanel {
+public class Keyboard extends JPanel implements ActionListener {
 
 	private final Color COLOR_DARK_GRAY = new Color(68, 68, 68);
 	private final Color COLOR_LIGHT_GRAY = new Color(99, 99, 99);
@@ -59,7 +64,16 @@ public class Keyboard extends JPanel {
 		c.gridy = y;
 		c.gridx = x;
 		Button button = new Button(text, color);
+		button.addActionListener(this);
 		add(button, c);
 
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() instanceof JButton) {
+			JButton b = (JButton) e.getSource();
+			CalculatorMemory.getInstance().handleCommand(b.getText());
+		}
 	}
 }
