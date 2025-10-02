@@ -56,7 +56,7 @@ public class Keyboard extends JPanel implements ActionListener {
 		c.gridwidth = 2;
 		addButton("0", COLOR_LIGHT_GRAY, c, 0, 4);
 		c.gridwidth = 1;
-		addButton(",", COLOR_LIGHT_GRAY, c, 2, 4);
+		addButton(".", COLOR_LIGHT_GRAY, c, 2, 4);
 		addButton("=", COLOR_ORANGE, c, 3, 4);
 	}
 
