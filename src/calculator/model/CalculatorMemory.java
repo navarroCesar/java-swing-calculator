@@ -6,14 +6,17 @@ import java.util.List;
 public class CalculatorMemory {
 
 	private enum InputType {
-		CLEAR, DIGIT, DIVISION, MULTIPLICATION, SUBTRACTION, SUM, EQUALS, DECIMAL_POINT;
+		CLEAR, PLUS_MINUS, DIGIT, DIVISION, MULTIPLICATION, SUBTRACTION, SUM, EQUALS, DECIMAL_POINT;
 	};
 
 	private static final CalculatorMemory instance = new CalculatorMemory();
 
 	private List<MemoryObserver> observers = new ArrayList<>();
 
+	private InputType previousOperation = null;
+	private boolean replace = false;
 	private String currentText = "";
+	private String bufferText = "";
 
 	private CalculatorMemory() {
 
@@ -33,13 +36,54 @@ public class CalculatorMemory {
 
 	public void handleCommand(String text) {
 		InputType command = identifyInputType(text);
-		System.out.println(command);
-		if ("AC".equals(text)) {
+
+		if (command == null) {
+			return;
+		} else if (command == InputType.CLEAR) {
 			currentText = "";
+			bufferText = "";
+			replace = false;
+			previousOperation = null;
+		} else if (command == InputType.PLUS_MINUS && currentText.contains("-")) {
+			currentText = currentText.substring(1);
+		} else if (command == InputType.PLUS_MINUS && !currentText.contains("-")) {
+			currentText = "-" + currentText;
+		} else if (command == InputType.DIGIT || command == InputType.DECIMAL_POINT) {
+			currentText = replace ? text : currentText + text;
+			replace = false;
 		} else {
-			currentText += text;
+			replace = true;
+			currentText = getOperationResult();
+			bufferText = currentText;
+			previousOperation = command;
+
 		}
+
 		observers.forEach(o -> o.valueUpdated(getCurrentText()));
+	}
+
+	private String getOperationResult() {
+		if (previousOperation == null || previousOperation == InputType.EQUALS) {
+			return currentText;
+		}
+
+		double bufferNumber = Double.parseDouble(bufferText);
+		double currentNumber = Double.parseDouble(currentText);
+
+		double result = 0;
+		if (previousOperation == InputType.SUM) {
+			result = bufferNumber + currentNumber;
+		} else if (previousOperation == InputType.SUBTRACTION) {
+			result = bufferNumber - currentNumber;
+		} else if (previousOperation == InputType.MULTIPLICATION) {
+			result = bufferNumber * currentNumber;
+		} else if (previousOperation == InputType.DIVISION) {
+			result = bufferNumber / currentNumber;
+		}
+
+		String resultString = Double.toString(result);
+		boolean isInteger = resultString.endsWith(".0");
+		return isInteger ? resultString.replace(".0", "") : resultString;
 	}
 
 	private InputType identifyInputType(String text) {
@@ -64,7 +108,9 @@ public class CalculatorMemory {
 				return InputType.SUBTRACTION;
 			} else if ("=".equals(text)) {
 				return InputType.EQUALS;
-			} else if (".".equals(text)) {
+			} else if ("±".equals(text)) {
+				return InputType.PLUS_MINUS;
+			} else if (".".equals(text) && !currentText.contains(".")) {
 				return InputType.DECIMAL_POINT;
 			}
 		}

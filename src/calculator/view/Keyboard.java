@@ -30,9 +30,10 @@ public class Keyboard extends JPanel implements ActionListener {
 		c.fill = GridBagConstraints.BOTH;
 
 		// First line
-		c.gridwidth = 3;
+		c.gridwidth = 2;
 		addButton("AC", COLOR_DARK_GRAY, c, 0, 0);
 		c.gridwidth = 1;
+		addButton("±", COLOR_DARK_GRAY, c, 2, 0);
 		addButton("/", COLOR_ORANGE, c, 3, 0);
 
 		// Second line
