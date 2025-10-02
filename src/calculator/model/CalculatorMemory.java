@@ -37,26 +37,38 @@ public class CalculatorMemory {
 	public void handleCommand(String text) {
 		InputType command = identifyInputType(text);
 
-		if (command == null) {
-			return;
-		} else if (command == InputType.CLEAR) {
-			currentText = "";
-			bufferText = "";
-			replace = false;
-			previousOperation = null;
-		} else if (command == InputType.PLUS_MINUS && currentText.contains("-")) {
-			currentText = currentText.substring(1);
-		} else if (command == InputType.PLUS_MINUS && !currentText.contains("-")) {
-			currentText = "-" + currentText;
-		} else if (command == InputType.DIGIT || command == InputType.DECIMAL_POINT) {
-			currentText = replace ? text : currentText + text;
-			replace = false;
-		} else {
-			replace = true;
-			currentText = getOperationResult();
-			bufferText = currentText;
-			previousOperation = command;
+		try {
+			if (command == null) {
+				return;
+			} else if (command == InputType.CLEAR) {
+				currentText = "";
+				bufferText = "";
+				replace = false;
+				previousOperation = null;
+			} else if (command == InputType.PLUS_MINUS && currentText.contains("-")) {
+				currentText = currentText.substring(1);
+			} else if (command == InputType.PLUS_MINUS && !currentText.contains("-")) {
+				currentText = "-" + currentText;
+			} else if (command == InputType.DIGIT) {
+				currentText = replace ? text : currentText + text;
+				replace = false;
+			} else if (command == InputType.DECIMAL_POINT) {
+				if (replace) {
+					if (!text.startsWith(".", 0)) {
+						currentText = text;
+					}
+				} else if (!replace) {
+					currentText = currentText + text;
+				}
+			} else {
+				replace = true;
+				currentText = getOperationResult();
+				bufferText = currentText;
+				previousOperation = command;
 
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 		}
 
 		observers.forEach(o -> o.valueUpdated(getCurrentText()));
